@@ -39,14 +39,16 @@ export function ImgWithFallback({
   }
 
   return (
-    <Image
-      src={src}
-      alt={alt}
-      fill
-      sizes={sizes}
-      priority={priority}
-      onError={() => setFailed(true)}
-      className={cn("object-cover", imgClassName)}
-    />
+    <div className={className}>
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes={sizes}
+        priority={priority}
+        onError={() => setFailed(true)}
+        className={cn("object-cover", imgClassName)}
+      />
+    </div>
   );
 }
