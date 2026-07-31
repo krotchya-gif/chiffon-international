@@ -166,7 +166,7 @@ export const subPerusahaan: SubPerusahaan[] = [
     deskripsiPanjang:
       "Chiffon International Travel membangun ekosistem perjalanan end-to-end: perencanaan itinerary, pemesanan tiket dan penginapan, hingga sistem pembayaran yang aman. Dirancang untuk segmen korporasi dan individu, platform ini dikelola lewat dashboard admin terpusat agar setiap perjalanan tercatat, transparan, dan mudah diaudit.",
     status: "aktif",
-    url: "https://travel.chiffoninternational.com/",
+    url: "https://chiffon-travel.vercel.app/",
     gambar: "https://picsum.photos/seed/travel1/800/600",
     highlight: ["Booking", "Payment Gateway", "Admin Panel"],
   },
