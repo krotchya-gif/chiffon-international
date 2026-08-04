@@ -4,27 +4,30 @@ import { Quotes, CheckCircle } from "@phosphor-icons/react";
 
 import { SectionHeading } from "@/components/section-heading";
 import { Reveal } from "@/components/motion/motion-utils";
-import { perusahaan } from "@/data/mock-data";
+import { useMessages } from "@/i18n/client";
 
 export function VisiMisi() {
+  const t = useMessages();
+  const { perusahaan } = t.data;
+
   return (
     <section className="border-y border-border bg-muted/30 py-24 md:py-32">
       <div className="container-edge grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
         <div>
           <Reveal>
-            <SectionHeading eyebrow="Visi & Misi" title="Arah yang Kami Pegang" />
+            <SectionHeading eyebrow={t.visiMisi.eyebrow} title={t.visiMisi.title} />
           </Reveal>
           <Reveal delay={0.1}>
-            <figure className="mt-10 border-l-2 border-accent pl-6 md:pl-8">
+            <figure className="mt-10 border-s-2 border-accent ps-6 md:ps-8">
               <Quotes
                 weight="fill"
-                className="h-8 w-8 -ml-1 text-accent/70"
+                className="h-8 w-8 -ms-1 text-accent/70 rtl:-scale-x-100"
               />
               <blockquote className="mt-3 font-display text-2xl font-medium leading-snug tracking-tight md:text-[2rem]">
                 {perusahaan.visi}
               </blockquote>
               <figcaption className="mt-5 text-sm text-muted-foreground">
-                Visi {perusahaan.nama}
+                {t.visiMisi.visiCaption}
               </figcaption>
             </figure>
           </Reveal>
@@ -32,7 +35,7 @@ export function VisiMisi() {
 
         <div>
           <p className="mb-6 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            Misi Kami
+            {t.visiMisi.misiKami}
           </p>
           <ol className="divide-y divide-border">
             {perusahaan.misi.map((misi, i) => (

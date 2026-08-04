@@ -29,25 +29,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/toaster";
-import { perusahaan, kontakSubjek } from "@/data/mock-data";
+import { useLocale, useMessages } from "@/i18n/client";
 import { submitKontak } from "@/lib/mock-api";
 import { cn } from "@/lib/utils";
 
-const kontakSchema = z.object({
-  nama: z.string().min(2, "Nama minimal 2 karakter"),
-  email: z.email("Email tidak valid"),
-  subjek: z.string().min(1, "Pilih subjek pesan"),
-  pesan: z.string().min(10, "Pesan minimal 10 karakter"),
-});
-
-type KontakForm = z.infer<typeof kontakSchema>;
-
-const infoKontak = [
-  { icon: MapPin, label: "Alamat", value: perusahaan.kontak.alamat },
-  { icon: Envelope, label: "Email", value: perusahaan.kontak.email },
-  { icon: Phone, label: "Telepon", value: perusahaan.kontak.telepon },
-  { icon: Clock, label: "Jam Operasional", value: perusahaan.kontak.jam },
-];
+type KontakForm = {
+  nama: string;
+  email: string;
+  subjek: string;
+  pesan: string;
+};
 
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
@@ -59,9 +50,24 @@ function FieldError({ message }: { message?: string }) {
 }
 
 export function KontakContent() {
+  const locale = useLocale();
+  const t = useMessages();
+  const { perusahaan, kontakSubjek } = t.data;
   const [status, setStatus] = React.useState<"idle" | "loading" | "success">(
     "idle",
   );
+
+  const kontakSchema = React.useMemo(
+    () =>
+      z.object({
+        nama: z.string().min(2, t.kontak.errors.namaMin),
+        email: z.email(t.kontak.errors.emailInvalid),
+        subjek: z.string().min(1, t.kontak.errors.subjekRequired),
+        pesan: z.string().min(10, t.kontak.errors.pesanMin),
+      }),
+    [t],
+  );
+
   const {
     register,
     control,
@@ -73,12 +79,22 @@ export function KontakContent() {
     defaultValues: { nama: "", email: "", subjek: "", pesan: "" },
   });
 
+  const infoKontak = React.useMemo(
+    () => [
+      { icon: MapPin, label: t.kontak.infoLabels.alamat, value: perusahaan.kontak.alamat },
+      { icon: Envelope, label: t.kontak.infoLabels.email, value: perusahaan.kontak.email },
+      { icon: Phone, label: t.kontak.infoLabels.telepon, value: perusahaan.kontak.telepon },
+      { icon: Clock, label: t.kontak.infoLabels.jam, value: perusahaan.kontak.jam },
+    ],
+    [t, perusahaan],
+  );
+
   const onSubmit = async (values: KontakForm) => {
     setStatus("loading");
     await submitKontak(values);
     setStatus("success");
-    toast.success("Pesan terkirim", {
-      description: "Tim kami akan merespons dalam 1×24 jam kerja.",
+    toast.success(t.kontak.toastTitle, {
+      description: t.kontak.toastDesc,
     });
     reset();
     setTimeout(() => setStatus("idle"), 6000);
@@ -89,9 +105,9 @@ export function KontakContent() {
       <section className="container-edge pt-24">
         <Reveal>
           <SectionHeading
-            eyebrow="Kontak"
-            title="Mulai Percakapan"
-            description="Ceritakan kebutuhan Anda — kerja sama, media, atau investasi. Tim Chiffon International siap merespons."
+            eyebrow={t.kontak.eyebrow}
+            title={t.kontak.title}
+            description={t.kontak.description}
           />
         </Reveal>
       </section>
@@ -131,15 +147,15 @@ export function KontakContent() {
               />
             </div>
             <div className="flex items-center justify-between gap-4 px-5 py-4">
-              <p className="text-sm font-medium">Menara Chiffon, Sudirman</p>
+              <p className="text-sm font-medium">{t.kontak.mapsAddress}</p>
               <a
                 href="https://maps.google.com/?q=Jl.+Jend.+Sudirman+Kav.+52-53+Jakarta+Selatan"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline underline-offset-4"
               >
-                Buka di Maps
-                <ArrowRight weight="light" className="h-3.5 w-3.5" />
+                {t.kontak.mapsLink}
+                <ArrowRight weight="light" className="h-3.5 w-3.5 rtl:rotate-180" />
               </a>
             </div>
           </div>
@@ -153,36 +169,35 @@ export function KontakContent() {
                   <CheckCircle weight="light" className="h-8 w-8" />
                 </span>
                 <h3 className="mt-6 font-display text-2xl font-semibold tracking-tight">
-                  Pesan Berhasil Terkirim
+                  {t.kontak.successTitle}
                 </h3>
                 <p className="mt-3 max-w-sm leading-relaxed text-muted-foreground">
-                  Terima kasih telah menghubungi Chiffon International. Tim
-                  kami akan membalas ke email Anda dalam 1×24 jam kerja.
+                  {t.kontak.successDesc}
                 </p>
                 <Button
                   variant="outline"
                   className="mt-8"
                   onClick={() => setStatus("idle")}
                 >
-                  Kirim Pesan Lain
+                  {t.kontak.successButton}
                 </Button>
               </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)} noValidate>
                 <h3 className="font-display text-2xl font-semibold tracking-tight">
-                  Kirim Pesan
+                  {t.kontak.formTitle}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Semua kolom wajib diisi.
+                  {t.kontak.formSubtitle}
                 </p>
 
                 <div className="mt-8 space-y-6">
                   <div className="grid gap-6 sm:grid-cols-2">
                     <div>
-                      <Label htmlFor="nama">Nama Lengkap</Label>
+                      <Label htmlFor="nama">{t.kontak.namaLabel}</Label>
                       <Input
                         id="nama"
-                        placeholder="Nama Anda"
+                        placeholder={t.kontak.namaPlaceholder}
                         className="mt-2"
                         aria-invalid={!!errors.nama}
                         {...register("nama")}
@@ -190,11 +205,11 @@ export function KontakContent() {
                       <FieldError message={errors.nama?.message} />
                     </div>
                     <div>
-                      <Label htmlFor="email">Email</Label>
+                      <Label htmlFor="email">{t.kontak.emailLabel}</Label>
                       <Input
                         id="email"
                         type="email"
-                        placeholder="nama@perusahaan.com"
+                        placeholder={t.kontak.emailPlaceholder}
                         className="mt-2"
                         aria-invalid={!!errors.email}
                         {...register("email")}
@@ -204,7 +219,7 @@ export function KontakContent() {
                   </div>
 
                   <div>
-                    <Label htmlFor="subjek">Subjek</Label>
+                    <Label htmlFor="subjek">{t.kontak.subjekLabel}</Label>
                     <Controller
                       control={control}
                       name="subjek"
@@ -219,7 +234,7 @@ export function KontakContent() {
                               className="mt-2"
                               aria-invalid={!!errors.subjek}
                             >
-                              <SelectValue placeholder="Pilih subjek pesan" />
+                              <SelectValue placeholder={t.kontak.subjekPlaceholder} />
                             </SelectTrigger>
                             <SelectContent>
                               {kontakSubjek.map((s) => (
@@ -236,10 +251,10 @@ export function KontakContent() {
                   </div>
 
                   <div>
-                    <Label htmlFor="pesan">Pesan</Label>
+                    <Label htmlFor="pesan">{t.kontak.pesanLabel}</Label>
                     <Textarea
                       id="pesan"
-                      placeholder="Tulis pesan Anda di sini…"
+                      placeholder={t.kontak.pesanPlaceholder}
                       className="mt-2"
                       aria-invalid={!!errors.pesan}
                       {...register("pesan")}
@@ -261,26 +276,22 @@ export function KontakContent() {
                         weight="bold"
                         className="h-4 w-4 animate-spin"
                       />
-                      Mengirim…
+                      {t.kontak.submittingLabel}
                     </>
                   ) : (
                     <>
-                      Kirim Pesan
-                      <PaperPlaneTilt weight="light" className="h-4 w-4" />
+                      {t.kontak.submitLabel}
+                      <PaperPlaneTilt weight="light" className="h-4 w-4 rtl:rotate-180" />
                     </>
                   )}
                 </Button>
-                <p
-                  className={cn(
-                    "mt-4 text-center text-xs text-muted-foreground",
-                  )}
-                >
-                  Dengan mengirim, Anda menyetujui{" "}
+                <p className={cn("mt-4 text-center text-xs text-muted-foreground")}>
+                  {t.kontak.privacyNote}{" "}
                   <a
-                    href="/privacy"
+                    href={`/${locale}/privacy`}
                     className="text-accent hover:underline underline-offset-4"
                   >
-                    kebijakan privasi
+                    {t.kontak.privacyLink}
                   </a>{" "}
                   kami.
                 </p>

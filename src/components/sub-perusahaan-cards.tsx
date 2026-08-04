@@ -8,14 +8,16 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ImgWithFallback } from "@/components/img-with-fallback";
-import type { SubPerusahaan } from "@/data/mock-data";
+import { useMessages } from "@/i18n/client";
+import type { SubPerusahaan } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 
 export function BadgeStatus({ status }: { status: SubPerusahaan["status"] }) {
+  const t = useMessages();
   return status === "aktif" ? (
-    <Badge variant="success">Aktif</Badge>
+    <Badge variant="success">{t.subPerusahaanCards.badgeAktif}</Badge>
   ) : (
-    <Badge variant="warning">Coming Soon</Badge>
+    <Badge variant="warning">{t.subPerusahaanCards.badgeComingSoon}</Badge>
   );
 }
 
@@ -28,6 +30,7 @@ export function SubPerusahaanCard({
   aspect?: string;
   className?: string;
 }) {
+  const t = useMessages();
   const isComingSoon = sp.status === "coming-soon";
 
   const inner = (
@@ -63,14 +66,14 @@ export function SubPerusahaanCard({
           {isComingSoon ? (
             <>
               <Hourglass weight="light" className="h-4 w-4" />
-              Segera Hadir
+              {t.subPerusahaanCards.segeraHadir}
             </>
           ) : (
             <>
-              Kunjungi Website
+              {t.subPerusahaanCards.kunjungiWebsite}
               <ArrowUpRight
                 weight="light"
-                className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5"
               />
             </>
           )}
@@ -83,28 +86,26 @@ export function SubPerusahaanCard({
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <button type="button" className="block h-full w-full text-left cursor-pointer">
+          <button type="button" className="block h-full w-full text-start cursor-pointer">
             {inner}
           </button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
             <Badge variant="warning" className="w-max">
-              Coming Soon
+              {t.subPerusahaanCards.badgeComingSoon}
             </Badge>
             <DialogTitle className="pt-2 font-display text-2xl">
-              EV Bus
+              {t.subPerusahaanCards.dialogTitle}
             </DialogTitle>
             <DialogDescription className="leading-relaxed">
-              EV Bus masih dalam tahap persiapan peluncuran. Inisiatif
-              transportasi publik berbasis bus listrik ini dirancang untuk
-              menghadirkan mobilitas kota yang netral karbon, dengan
-              manajemen armada pintar dan pengalaman perjalanan yang lebih
-              tenang. Nantikan pengumuman resmi dari Chiffon International.
+              {t.subPerusahaanCards.dialogDesc}
             </DialogDescription>
           </DialogHeader>
           <div className="flex items-center justify-between border-t pt-4 text-sm">
-            <span className="text-muted-foreground">Lini Bisnis</span>
+            <span className="text-muted-foreground">
+              {t.subPerusahaanCards.dialogLini}
+            </span>
             <span className="font-medium">{sp.lini}</span>
           </div>
         </DialogContent>
@@ -126,6 +127,8 @@ export function SubPerusahaanZigzag({
   sp: SubPerusahaan;
   reversed?: boolean;
 }) {
+  const t = useMessages();
+
   return (
     <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
       <div className={cn(reversed && "lg:order-2")}>
@@ -165,13 +168,13 @@ export function SubPerusahaanZigzag({
           {sp.status === "coming-soon" ? (
             <Button variant="secondary" disabled>
               <Hourglass weight="light" className="h-4 w-4" />
-              Segera Hadir
+              {t.subPerusahaanCards.segeraHadir}
             </Button>
           ) : (
             <Button variant="accent" asChild>
               <Link href={sp.url} target="_blank" rel="noopener noreferrer">
-                Kunjungi Website
-                <ArrowRight weight="light" className="h-4 w-4" />
+                {t.subPerusahaanCards.kunjungiWebsite}
+                <ArrowRight weight="light" className="h-4 w-4 rtl:rotate-180" />
               </Link>
             </Button>
           )}

@@ -7,7 +7,7 @@ import { Reveal } from "@/components/motion/motion-utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ImgWithFallback } from "@/components/img-with-fallback";
-import { perusahaan, sertifikasi } from "@/data/mock-data";
+import { useMessages } from "@/i18n/client";
 import { cn } from "@/lib/utils";
 
 const iconMap: Record<string, React.ElementType> = {
@@ -18,13 +18,14 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 function PageIntro() {
+  const t = useMessages();
   return (
     <div className="container-edge pb-16 pt-24">
       <Reveal>
         <SectionHeading
-          eyebrow="Tentang Kami"
-          title="Perjalanan yang Dimulai dari Kepercayaan"
-          description={`${perusahaan.nama} berdiri pada 2009 dengan satu keyakinan sederhana: bisnis yang dikelola dengan integritas akan bertahan melampaui generasi.`}
+          eyebrow={t.tentang.intro.eyebrow}
+          title={t.tentang.intro.title}
+          description={t.tentang.intro.description}
         />
       </Reveal>
     </div>
@@ -32,31 +33,16 @@ function PageIntro() {
 }
 
 function Cerita() {
+  const t = useMessages();
+  const { perusahaan } = t.data;
+
   return (
     <section className="container-edge grid gap-12 pb-24 lg:grid-cols-2 lg:gap-16">
       <Reveal>
         <div className="space-y-6 text-base leading-relaxed text-muted-foreground">
-          <p>
-            Chiffon International lahir di Jakarta sebagai perusahaan
-            perdagangan multisektoral — awal dari sebuah keyakinan bahwa
-            Indonesia membutuhkan lebih banyak kelompok usaha yang dikelola
-            dengan standar internasional. Dari distribusi barang konsumen,
-            kami tumbuh menjadi holding yang menaungi tiga lini bisnis:
-            kesehatan, perjalanan, dan transportasi masa depan.
-          </p>
-          <p>
-            Kami tidak mengejar jumlah demi jumlah. Setiap lini usaha
-            dibangun di atas fondasi yang sama — tata kelola yang transparan,
-            produk yang benar-benar berkualitas, dan dampak yang bisa
-            diukur. Ketika kami masuk ke sektor baru, kami memastikan ada
-            keahlian, kemitraan, dan kesabaran untuk membangun dengan benar.
-          </p>
-          <p>
-            Hari ini, lebih dari tiga ratus karyawan bekerja di bawah
-            payung Chiffon International. Namun yang lebih penting dari
-            angka adalah kepercayaan — dari mitra, distributor, dan
-            pelanggan — yang kami rawat sejak 2009 hingga kini.
-          </p>
+          {t.tentang.cerita.map((paragraf) => (
+            <p key={paragraf}>{paragraf}</p>
+          ))}
         </div>
       </Reveal>
       <Reveal delay={0.1}>
@@ -64,8 +50,8 @@ function Cerita() {
           <div className="relative overflow-hidden rounded-2xl border border-border">
             <div className="aspect-[3/4]">
               <ImgWithFallback
-                src="https://picsum.photos/seed/chiffon-story1/600/800"
-                alt="Kegiatan operasional Chiffon International"
+                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&q=80&auto=format&fit=crop"
+                alt={t.tentang.story1Alt}
                 className="absolute inset-0"
                 sizes="(max-width: 1024px) 50vw, 25vw"
               />
@@ -75,8 +61,8 @@ function Cerita() {
             <div className="relative flex-1 overflow-hidden rounded-2xl border border-border">
               <div className="h-full min-h-40">
                 <ImgWithFallback
-                  src="https://picsum.photos/seed/chiffon-story2/500/500"
-                  alt="Gedung kantor Chiffon International"
+                  src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=500&q=80&auto=format&fit=crop"
+                  alt={t.tentang.story2Alt}
                   className="absolute inset-0"
                   sizes="(max-width: 1024px) 50vw, 25vw"
                 />
@@ -88,7 +74,7 @@ function Cerita() {
                 {perusahaan.stats[0].value}
               </p>
               <p className="mt-1 text-xs uppercase tracking-[0.18em] text-primary-foreground/60">
-                Melayani sejak {perusahaan.stats[0].value}
+                {t.tentang.buildingLabel} {perusahaan.stats[0].value}
               </p>
             </div>
           </div>
@@ -99,16 +85,19 @@ function Cerita() {
 }
 
 function Timeline() {
+  const t = useMessages();
+  const { perusahaan } = t.data;
+
   return (
     <section className="border-y border-border bg-muted/30 py-24 md:py-28">
       <div className="container-edge">
         <SectionHeading
-          eyebrow="Sejarah"
-          title="Milestone Sepanjang Perjalanan"
+          eyebrow={t.tentang.timeline.eyebrow}
+          title={t.tentang.timeline.title}
           align="center"
         />
         <div className="relative mx-auto mt-16 max-w-3xl">
-          <span className="absolute left-5 top-0 h-full w-px bg-border md:left-1/2" />
+          <span className="absolute start-5 top-0 h-full w-px bg-border md:start-1/2" />
           <div className="space-y-10">
             {perusahaan.timeline.map((item, i) => {
               const right = i % 2 === 1;
@@ -118,21 +107,21 @@ function Timeline() {
                     className={cn(
                       "relative flex items-start gap-8 md:w-1/2",
                       right
-                        ? "md:ml-auto md:pl-12"
-                        : "md:flex-row-reverse md:pr-12 md:text-right",
+                        ? "md:ms-auto md:ps-12"
+                        : "md:flex-row-reverse md:pe-12 md:text-end",
                     )}
                   >
                     <span
                       className={cn(
-                        "absolute left-0 top-1.5 flex h-10 w-10 items-center justify-center rounded-full border-2 border-accent bg-card font-display text-xs font-bold text-accent md:left-auto",
+                        "absolute start-0 top-1.5 flex h-10 w-10 items-center justify-center rounded-full border-2 border-accent bg-card font-display text-xs font-bold text-accent md:start-auto",
                         right
-                          ? "md:-left-5"
-                          : "md:-right-5 md:left-auto md:translate-x-0",
+                          ? "md:-start-5"
+                          : "md:-end-5 md:start-auto md:translate-x-0",
                       )}
                     >
                       {item.tahun}
                     </span>
-                    <div className="pl-16 md:pl-0">
+                    <div className="ps-16 md:ps-0">
                       <p className="font-display text-sm font-semibold text-accent md:hidden">
                         {item.tahun}
                       </p>
@@ -155,22 +144,25 @@ function Timeline() {
 }
 
 function NilaiSertifikasi() {
+  const t = useMessages();
+  const { perusahaan, sertifikasi } = t.data;
+
   return (
     <section className="container-edge py-24 md:py-28">
       <SectionHeading
-        eyebrow="Fondasi"
-        title="Nilai & Pengakuan"
+        eyebrow={t.tentang.fondasi.eyebrow}
+        title={t.tentang.fondasi.title}
         align="center"
-        description="Standar yang kami pegang diuji oleh badan independen — dan dirawat setiap hari di setiap lini usaha."
+        description={t.tentang.fondasi.description}
       />
       <Reveal delay={0.1}>
         <Tabs defaultValue="nilai" className="mx-auto mt-12 max-w-3xl">
           <TabsList className="w-full sm:w-max">
             <TabsTrigger value="nilai" className="flex-1 sm:flex-none">
-              Nilai Perusahaan
+              {t.tentang.tabNilai}
             </TabsTrigger>
             <TabsTrigger value="sertifikasi" className="flex-1 sm:flex-none">
-              Sertifikasi & Penghargaan
+              {t.tentang.tabSertifikasi}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="nilai">
@@ -208,16 +200,14 @@ function NilaiSertifikasi() {
                   </span>
                   <div className="min-w-0">
                     <p className="text-sm font-medium leading-snug">{s.nama}</p>
-                    <p className="mt-0.5 text-xs text-muted-foreground">
-                      {s.tahun}
-                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{s.tahun}</p>
                   </div>
                 </li>
               ))}
             </ul>
             <div className="mt-6 flex justify-center">
               <Badge variant="outline" className="px-4 py-1.5">
-                Dan penghargaan sektoral lainnya
+                {t.tentang.badgeLainnya}
               </Badge>
             </div>
           </TabsContent>

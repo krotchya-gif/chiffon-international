@@ -7,18 +7,17 @@ import { Reveal } from "@/components/motion/motion-utils";
 import { PhantomSkeleton } from "@/components/phantom-skeleton";
 import { SubPerusahaanZigzag } from "@/components/sub-perusahaan-cards";
 import { useSubPerusahaan } from "@/hooks/use-mock-data";
+import { useMessages } from "@/i18n/client";
 
 function LoadingZigzag() {
   return (
     <PhantomSkeleton loading>
       <div className="space-y-20">
         {["Chiffon International Travel", "Zynergia Health & Wellness", "EV Bus"].map(
-          (nama, i) => (
+          (nama) => (
             <div
               key={nama}
-              className={`grid items-center gap-10 lg:grid-cols-2 lg:gap-16 ${
-                i % 2 === 1 ? "" : ""
-              }`}
+              className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
             >
               <div className="aspect-[16/10] rounded-2xl border border-border bg-card">
                 <p className="p-6 font-display text-2xl">{nama}</p>
@@ -37,6 +36,7 @@ function LoadingZigzag() {
 }
 
 export function SubPerusahaanContent() {
+  const t = useMessages();
   const { data, isLoading, isError, refetch } = useSubPerusahaan();
 
   return (
@@ -44,9 +44,9 @@ export function SubPerusahaanContent() {
       <section className="container-edge pt-24">
         <Reveal>
           <SectionHeading
-            eyebrow="Sub-Perusahaan"
-            title="Gerbang Menuju Tiga Lini Bisnis"
-            description="Sebagai holding company, kami menaungi tiga lini usaha yang beroperasi secara independen — masing-masing dipimpin timnya sendiri, dipayungi tata kelola grup yang sama."
+            eyebrow={t.subPerusahaanPage.eyebrow}
+            title={t.subPerusahaanPage.title}
+            description={t.subPerusahaanPage.description}
           />
         </Reveal>
       </section>
@@ -58,17 +58,17 @@ export function SubPerusahaanContent() {
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-muted/40 px-6 py-20 text-center">
             <WarningCircle weight="light" className="h-10 w-10 text-warning" />
             <p className="mt-4 font-display text-xl font-semibold">
-              Gagal memuat data lini usaha
+              {t.subPerusahaanPage.errorTitle}
             </p>
             <p className="mt-2 max-w-sm text-sm text-muted-foreground">
-              Terjadi kesalahan saat mengambil data. Silakan coba lagi.
+              {t.subPerusahaanPage.errorDesc}
             </p>
             <button
               type="button"
               onClick={() => refetch()}
               className="mt-6 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium transition-colors hover:bg-muted cursor-pointer"
             >
-              Coba Lagi
+              {t.subPerusahaanPage.cobaLagi}
             </button>
           </div>
         )}

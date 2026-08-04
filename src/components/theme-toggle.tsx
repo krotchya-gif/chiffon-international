@@ -5,15 +5,17 @@ import { useTheme } from "next-themes";
 import { Moon, Sun } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
+import { useMessages } from "@/i18n/client";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
+  const t = useMessages();
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      aria-label="Ganti tema"
+      aria-label={t.themeToggle.gantiTema}
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
     >
       {resolvedTheme === "dark" ? (

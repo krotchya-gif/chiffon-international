@@ -4,7 +4,7 @@ import { Scales, Lightbulb, Leaf, Handshake } from "@phosphor-icons/react";
 
 import { SectionHeading } from "@/components/section-heading";
 import { Reveal } from "@/components/motion/motion-utils";
-import { perusahaan } from "@/data/mock-data";
+import { useMessages } from "@/i18n/client";
 import { cn } from "@/lib/utils";
 
 const iconMap: Record<string, React.ElementType> = {
@@ -15,13 +15,16 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 export function NilaiSection() {
+  const t = useMessages();
+  const { perusahaan } = t.data;
+
   return (
     <section className="py-24 md:py-32">
       <div className="container-edge">
         <SectionHeading
-          eyebrow="Nilai Perusahaan"
-          title="Prinsip yang Menjaga Arah"
-          description="Empat nilai ini adalah dasar setiap keputusan — dari ruang rapat direksi hingga lantai operasional."
+          eyebrow={t.nilaiSection.eyebrow}
+          title={t.nilaiSection.title}
+          description={t.nilaiSection.description}
           align="center"
         />
         <div className="mx-auto mt-14 max-w-4xl">
@@ -40,7 +43,9 @@ export function NilaiSection() {
                   </span>
                   <div>
                     <p className="font-display text-xl font-semibold tracking-tight md:text-2xl">
-                      <span className="mr-3 text-accent">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="me-3 text-accent">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
                       {nilai.nama}
                     </p>
                     <p className="mt-2 max-w-[65ch] leading-relaxed text-muted-foreground">

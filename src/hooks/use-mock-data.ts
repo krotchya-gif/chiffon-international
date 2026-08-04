@@ -1,6 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+
+import { useLocale } from "@/i18n/client";
 import {
   fetchPerusahaan,
   fetchSubPerusahaan,
@@ -8,22 +10,25 @@ import {
 } from "@/lib/mock-api";
 
 export function usePerusahaan() {
+  const locale = useLocale();
   return useQuery({
-    queryKey: ["perusahaan"],
-    queryFn: fetchPerusahaan,
+    queryKey: ["perusahaan", locale],
+    queryFn: () => fetchPerusahaan(locale),
   });
 }
 
 export function useSubPerusahaan() {
+  const locale = useLocale();
   return useQuery({
-    queryKey: ["sub-perusahaan"],
-    queryFn: fetchSubPerusahaan,
+    queryKey: ["sub-perusahaan", locale],
+    queryFn: () => fetchSubPerusahaan(locale),
   });
 }
 
 export function useSubPerusahaanById(id: string) {
+  const locale = useLocale();
   return useQuery({
-    queryKey: ["sub-perusahaan", id],
-    queryFn: () => fetchSubPerusahaanById(id),
+    queryKey: ["sub-perusahaan", id, locale],
+    queryFn: () => fetchSubPerusahaanById(id, locale),
   });
 }

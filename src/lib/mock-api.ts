@@ -1,22 +1,22 @@
-import { perusahaan, subPerusahaan } from "@/data/mock-data";
+import { getMessages } from "@/i18n/get-messages";
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function fetchPerusahaan() {
+export async function fetchPerusahaan(locale: string) {
   await delay(700);
-  return structuredClone(perusahaan);
+  return structuredClone(getMessages(locale).data.perusahaan);
 }
 
-export async function fetchSubPerusahaan() {
+export async function fetchSubPerusahaan(locale: string) {
   await delay(800);
-  return structuredClone(subPerusahaan);
+  return structuredClone(getMessages(locale).data.subPerusahaan);
 }
 
-export async function fetchSubPerusahaanById(id: string) {
+export async function fetchSubPerusahaanById(id: string, locale: string) {
   await delay(500);
-  const item = subPerusahaan.find((sp) => sp.id === id);
+  const item = getMessages(locale).data.subPerusahaan.find((sp) => sp.id === id);
   if (!item) {
     throw new Error("Sub-perusahaan tidak ditemukan");
   }
